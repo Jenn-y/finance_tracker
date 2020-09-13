@@ -1,10 +1,32 @@
 class UsersController < ApplicationController
-  # before_action :user_credentials
+
   def my_portfolio
     @tracked_stocks = current_user.stocks
   end
 
-  # def user_credentials
-  #   params.require(:user).permit(:first_name, :last_name, :email, :password)
-  # end
+  def my_friends
+    @friends = current_user.friends
+  end
+
+  def search
+    if params[:friend].present?
+      @friend = params[:friend]
+      if @friend
+        respond_to do |format|
+          format.js { render partial: 'users/friend_result' }
+        end
+      else
+        respond_to do |format|
+          flash.now[:alert] = "Cannot find the user"
+          format.js { render partial: 'users/friend_result' }
+        end
+      end
+    else
+      respond_to do |format|
+        flash.now[:alert] = "Please enter a valid user name or email for search"
+        format.js { render partial: 'users/friend_result' }
+      end
+    end
+  end
+  
 end
