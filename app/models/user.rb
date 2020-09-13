@@ -6,6 +6,8 @@ class User < ApplicationRecord
   
   has_many :user_stocks
   has_many :stocks, through: :user_stocks
+
+  validates :first_name, :last_name, presence: true
   
   def stock_already_tracked?(ticker_symbol)
     stock = Stock.check_db(ticker_symbol)
@@ -21,4 +23,8 @@ class User < ApplicationRecord
     under_stock_limit? && !stock_already_tracked?(ticker_symbol)
   end
 
+  def full_name
+   return  "#{first_name} #{last_name}" if first_name || last_name
+   "Anonymous"
+  end
 end
